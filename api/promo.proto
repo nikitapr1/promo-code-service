@@ -1,0 +1,78 @@
+syntax = "proto3";
+option go_package = "pkg/api/promopb";
+package api;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/type.proto";
+import "google/type/date.proto";
+
+service PromoService {
+  rpc CreatePromo(CreatePromoRequest) returns (CreatePromoResponse) {
+
+  }
+}
+
+
+message CreatePromoRequest {
+  Mode enum = 1;
+  optional string promo_common = 2;
+  repeated string promo_unique = 3;
+  string description = 4;
+  optional string image_url = 5;
+  Target target = 6;
+  google.type.Date active_from = 7;
+  google.type.Date active_until = 8;
+}
+
+message CreatePromoResponse {
+  string id = 1;
+}
+
+message ListPromoRequest {
+  string company_id = 1;
+  uint64 limit = 2;
+  uint64 offset = 3;
+  PromoSortBy sort_by = 4;
+  string country = 5;
+}
+
+message ListPromoResponse {
+  int64 x_total_count = 1;
+  repeated Promo promo = 2;
+}
+
+
+message Target {
+  optional uint32 age_from = 1;
+  optional uint32 age_until = 2;
+  optional string country = 3;
+  repeated string categories = 4;
+}
+
+message Promo {
+  string promo_id = 1;
+  string company_id = 2;
+  string company_name = 3;
+  int64 like_count = 4;
+  int64 used_count = 5;
+  bool active = 6;
+  Mode mode = 7;
+  optional string promo_common = 8;
+  repeated string promo_unique = 9;
+  string description = 10;
+  optional string image_url = 11;
+  Target target = 12;
+  int64 max_count = 13;
+  optional google.type.Date active_from = 14;
+  optional google.type.Date active_until = 15;
+}
+
+enum Mode {
+  COMMON = 0;
+  UNIQUE = 1;
+}
+
+enum PromoSortBy {
+  ACTIVE_FROM = 0;
+  ACTIVE_UNTIL = 1;
+}
