@@ -1,0 +1,14 @@
+version: '3'
+
+vars:
+  PROTO_PATH: "./api/promo.proto"
+  PROTO_DIR: "api"
+  GEN_PATH: "./pkg/api/pb"
+
+tasks:
+  generate-proto:
+    aliases:
+      - gen
+    desc: Generate Go code from protobuf
+    cmds:
+      - protoc -I {{.PROTO_DIR}} {{.PROTO_PATH}} --go_out={{.GEN_PATH}} --go-grpc_out={{.GEN_PATH}} --go_opt=paths=source_relative --go-grpc_opt=paths=source_relative
