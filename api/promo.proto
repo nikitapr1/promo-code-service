@@ -2,14 +2,10 @@ syntax = "proto3";
 option go_package = "pkg/api/promopb";
 package api;
 
-import "google/protobuf/timestamp.proto";
-import "google/protobuf/type.proto";
 import "google/type/date.proto";
 
 service PromoService {
-  rpc CreatePromo(CreatePromoRequest) returns (CreatePromoResponse) {
-
-  }
+  rpc CreatePromo(CreatePromoRequest) returns (CreatePromoResponse);
 }
 
 
@@ -41,6 +37,30 @@ message ListPromoResponse {
   repeated Promo promo = 2;
 }
 
+message GetPromoRequest {
+  string company_id = 1;
+  string promo_id = 2;
+}
+
+message GetPromoResponse {
+  Promo promo = 1;
+}
+
+message UpdatePromoRequest {
+  string company_id = 1;
+  string promo_id = 2;
+
+  string description = 3;
+  string image_url = 4;
+  Target target = 5;
+  int64 max_count = 6;
+  google.type.Date active_from = 7;
+  google.type.Date active_until = 8;
+}
+
+message UpdatePromoResponse {
+  Promo promo = 1;
+}
 
 message Target {
   optional uint32 age_from = 1;
