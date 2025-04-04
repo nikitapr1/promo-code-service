@@ -20,6 +20,9 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	PromoService_CreatePromo_FullMethodName = "/api.PromoService/CreatePromo"
+	PromoService_ListPromo_FullMethodName   = "/api.PromoService/ListPromo"
+	PromoService_GetPromo_FullMethodName    = "/api.PromoService/GetPromo"
+	PromoService_UpdatePromo_FullMethodName = "/api.PromoService/UpdatePromo"
 )
 
 // PromoServiceClient is the client API for PromoService service.
@@ -27,6 +30,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PromoServiceClient interface {
 	CreatePromo(ctx context.Context, in *CreatePromoRequest, opts ...grpc.CallOption) (*CreatePromoResponse, error)
+	ListPromo(ctx context.Context, in *ListPromoRequest, opts ...grpc.CallOption) (*ListPromoResponse, error)
+	GetPromo(ctx context.Context, in *GetPromoRequest, opts ...grpc.CallOption) (*GetPromoResponse, error)
+	UpdatePromo(ctx context.Context, in *UpdatePromoRequest, opts ...grpc.CallOption) (*UpdatePromoResponse, error)
 }
 
 type promoServiceClient struct {
@@ -47,11 +53,44 @@ func (c *promoServiceClient) CreatePromo(ctx context.Context, in *CreatePromoReq
 	return out, nil
 }
 
+func (c *promoServiceClient) ListPromo(ctx context.Context, in *ListPromoRequest, opts ...grpc.CallOption) (*ListPromoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPromoResponse)
+	err := c.cc.Invoke(ctx, PromoService_ListPromo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *promoServiceClient) GetPromo(ctx context.Context, in *GetPromoRequest, opts ...grpc.CallOption) (*GetPromoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPromoResponse)
+	err := c.cc.Invoke(ctx, PromoService_GetPromo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *promoServiceClient) UpdatePromo(ctx context.Context, in *UpdatePromoRequest, opts ...grpc.CallOption) (*UpdatePromoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePromoResponse)
+	err := c.cc.Invoke(ctx, PromoService_UpdatePromo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PromoServiceServer is the server API for PromoService service.
 // All implementations must embed UnimplementedPromoServiceServer
 // for forward compatibility.
 type PromoServiceServer interface {
 	CreatePromo(context.Context, *CreatePromoRequest) (*CreatePromoResponse, error)
+	ListPromo(context.Context, *ListPromoRequest) (*ListPromoResponse, error)
+	GetPromo(context.Context, *GetPromoRequest) (*GetPromoResponse, error)
+	UpdatePromo(context.Context, *UpdatePromoRequest) (*UpdatePromoResponse, error)
 	mustEmbedUnimplementedPromoServiceServer()
 }
 
@@ -64,6 +103,15 @@ type UnimplementedPromoServiceServer struct{}
 
 func (UnimplementedPromoServiceServer) CreatePromo(context.Context, *CreatePromoRequest) (*CreatePromoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePromo not implemented")
+}
+func (UnimplementedPromoServiceServer) ListPromo(context.Context, *ListPromoRequest) (*ListPromoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPromo not implemented")
+}
+func (UnimplementedPromoServiceServer) GetPromo(context.Context, *GetPromoRequest) (*GetPromoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPromo not implemented")
+}
+func (UnimplementedPromoServiceServer) UpdatePromo(context.Context, *UpdatePromoRequest) (*UpdatePromoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePromo not implemented")
 }
 func (UnimplementedPromoServiceServer) mustEmbedUnimplementedPromoServiceServer() {}
 func (UnimplementedPromoServiceServer) testEmbeddedByValue()                      {}
@@ -104,6 +152,60 @@ func _PromoService_CreatePromo_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PromoService_ListPromo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPromoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PromoServiceServer).ListPromo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PromoService_ListPromo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PromoServiceServer).ListPromo(ctx, req.(*ListPromoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PromoService_GetPromo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPromoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PromoServiceServer).GetPromo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PromoService_GetPromo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PromoServiceServer).GetPromo(ctx, req.(*GetPromoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PromoService_UpdatePromo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePromoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PromoServiceServer).UpdatePromo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PromoService_UpdatePromo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PromoServiceServer).UpdatePromo(ctx, req.(*UpdatePromoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PromoService_ServiceDesc is the grpc.ServiceDesc for PromoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +216,18 @@ var PromoService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreatePromo",
 			Handler:    _PromoService_CreatePromo_Handler,
+		},
+		{
+			MethodName: "ListPromo",
+			Handler:    _PromoService_ListPromo_Handler,
+		},
+		{
+			MethodName: "GetPromo",
+			Handler:    _PromoService_GetPromo_Handler,
+		},
+		{
+			MethodName: "UpdatePromo",
+			Handler:    _PromoService_UpdatePromo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

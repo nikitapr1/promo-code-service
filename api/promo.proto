@@ -6,6 +6,9 @@ import "google/type/date.proto";
 
 service PromoService {
   rpc CreatePromo(CreatePromoRequest) returns (CreatePromoResponse);
+  rpc ListPromo(ListPromoRequest) returns (ListPromoResponse);
+  rpc GetPromo(GetPromoRequest) returns (GetPromoResponse);
+  rpc UpdatePromo(UpdatePromoRequest) returns (UpdatePromoResponse);
 }
 
 
