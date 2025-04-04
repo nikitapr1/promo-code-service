@@ -5,8 +5,8 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
-	"yandexdz/internal/grpc/interceptor"
-	ordergrpc "yandexdz/internal/grpc/order"
+	promogrpc "ya-promo-code-service/internal/grpc"
+	"ya-promo-code-service/internal/grpc/interceptor"
 )
 
 type App struct {
@@ -17,7 +17,7 @@ type App struct {
 
 func New(
 	log *zap.Logger,
-	orderGRPC pro.Order,
+	promoService promogrpc.PromoService,
 	port int,
 ) *App {
 
@@ -25,7 +25,7 @@ func New(
 		grpc.UnaryInterceptor(interceptor.LogRequestUnaryInterceptor(log)),
 	)
 
-	ordergrpc.Register(gRPCServer, orderGRPC)
+	promogrpc.Register(gRPCServer, promoService)
 
 	return &App{log: log, gRPCServer: gRPCServer, port: port}
 }

@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: promo-code-service-db
+    image: postgres:17.2
+    volumes:
+      - ./docker_volumes/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 3s
+      timeout: 1s
+      retries: 8
+    restart: always
+
+#
+#  app:
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    container_name: promo-code-service-app
+#    build:
+#      dockerfile: ./Dockerfile
+#    ports:
+#      - ${GRPC_PORT}:${GRPC_PORT}
+#      - ${REST_PORT}:${REST_PORT}
+#    env_file:
+#      - .env
+#
