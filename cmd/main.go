@@ -8,8 +8,12 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"ya-promo-code-service/internal/app"
 	"ya-promo-code-service/internal/config"
+	promogrpc "ya-promo-code-service/internal/grpc"
+	"ya-promo-code-service/internal/grpc/handler/create_promo"
+	promoservice "ya-promo-code-service/internal/service/promo"
+	"ya-promo-code-service/internal/storage/postgres"
+	promopb "ya-promo-code-service/pkg/api/pb"
 )
 
 const (
@@ -30,18 +34,32 @@ func main() {
 
 	log.Info("Starting Promo Service", zap.Int("port", cfg.GRPCPort))
 
-	//application := app.New(log, cfg.GRPCPort, cfg.DatabaseUrl)
-	//
-	//go application.GRPCSrv.MustRun()
+	storage, err := postgres.New(cfg.DatabaseUrl)
+	if err != nil {
+		panic(fmt.Errorf("%s: failed to connect: %s", op, err))
+	}
+
+	promoService := promoservice.New(log, storage, storage)
+
+	server := grpc.NewServer()
+
+	createPromoHandler := create_promo.New(promoService)
+
+	serverAPI := promogrpc.New(promoService, createPromoHandler)
+
+	promopb.RegisterPromoServiceServer(server, serverAPI)
+
+	go mustRunGRPCServer(server, cfg.GRPCPort)
 
 	stop := make(chan os.Signal, 1)
 
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 
 	sign := <-stop
+
 	log.Info("Stopping application...\n", zap.String("signal", sign.String()))
 
-	application.GRPCSrv.Stop()
+	server.GracefulStop()
 
 	log.Info("Application stopped")
 }
@@ -62,20 +80,18 @@ func setupLogger(env string) (*zap.Logger, error) {
 	return log, err
 }
 
-func runGRPCServer(log *zap.Logger, server *grpc.Server) error {
-	const op = "grpcapp.Run"
+func mustRunGRPCServer(server *grpc.Server, port int) {
 
-	log = log.With(zap.String("op", op))
+	const op = "main.RunGRPCServer"
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		panic(fmt.Errorf("%s: failed to listen: %s", op, err))
 	}
 
-	log.Info("grpc server is running", zap.String("Address", lis.Addr().String()))
-
-	if err := server.Serve(lis); err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+	err = server.Serve(lis)
+	if err != nil {
+		panic(fmt.Errorf("%s: failed to serve: %s", op, err))
 	}
-	return nil
+
 }

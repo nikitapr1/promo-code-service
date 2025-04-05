@@ -7,5 +7,5 @@ import (
 )
 
 type promoService interface {
-	Create(ctx context.Context, promoDto dto.PromoDTO)
+	Create(ctx context.Context, companyId string, promoDto dto.PromoDTO)
 }
