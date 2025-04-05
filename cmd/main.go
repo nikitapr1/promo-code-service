@@ -7,13 +7,13 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"promo-code-service/internal/config"
+	promogrpc "promo-code-service/internal/grpc"
+	"promo-code-service/internal/grpc/handler/create_promo"
+	promoservice "promo-code-service/internal/service/promo"
+	"promo-code-service/internal/storage/postgres"
+	promopb "promo-code-service/pkg/api/pb"
 	"syscall"
-	"ya-promo-code-service/internal/config"
-	promogrpc "ya-promo-code-service/internal/grpc"
-	"ya-promo-code-service/internal/grpc/handler/create_promo"
-	promoservice "ya-promo-code-service/internal/service/promo"
-	"ya-promo-code-service/internal/storage/postgres"
-	promopb "ya-promo-code-service/pkg/api/pb"
 )
 
 const (

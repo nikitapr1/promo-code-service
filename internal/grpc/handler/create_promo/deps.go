@@ -3,7 +3,7 @@ package create_promo
 
 import (
 	"context"
-	"ya-promo-code-service/internal/domain/dto"
+	"promo-code-service/internal/domain/dto"
 )
 
 type promoService interface {

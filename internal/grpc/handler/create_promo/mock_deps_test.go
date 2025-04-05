@@ -11,8 +11,8 @@ package create_promo
 
 import (
 	context "context"
+	dto "promo-code-service/internal/domain/dto"
 	reflect "reflect"
-	dto "ya-promo-code-service/internal/domain/dto"
 
 	gomock "go.uber.org/mock/gomock"
 )

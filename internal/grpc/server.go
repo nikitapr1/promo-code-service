@@ -2,9 +2,9 @@ package promogrpc
 
 import (
 	"context"
-	"ya-promo-code-service/internal/grpc/handler/create_promo"
-	promoservice "ya-promo-code-service/internal/service/promo"
-	promopb "ya-promo-code-service/pkg/api/pb"
+	"promo-code-service/internal/grpc/handler/create_promo"
+	promoservice "promo-code-service/internal/service/promo"
+	promopb "promo-code-service/pkg/api/pb"
 )
 
 type ServerAPI struct {

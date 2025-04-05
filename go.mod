@@ -1,4 +1,4 @@
-module ya-promo-code-service
+module promo-code-service
 
 go 1.24
 

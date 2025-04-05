@@ -3,7 +3,7 @@ package promoservice
 import (
 	"context"
 	"go.uber.org/zap"
-	"ya-promo-code-service/internal/domain/dto"
+	"promo-code-service/internal/domain/dto"
 )
 
 type Service struct {
