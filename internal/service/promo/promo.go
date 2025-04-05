@@ -33,7 +33,7 @@ func New(
 	}
 }
 
-func (p *Service) Create(ctx context.Context, companyId string, promoDto promo.CreatePromoDTO) {
+func (p *Service) Create(ctx context.Context, companyId string, promoDto promo.CreatePromoDTO) (id string, err error) {
 	//TODO implement me
 	panic("implement me")
 }
