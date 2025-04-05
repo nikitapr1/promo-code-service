@@ -11,7 +11,7 @@ package create_promo
 
 import (
 	context "context"
-	dto "promo-code-service/internal/domain/dto"
+	promo "promo-code-service/internal/domain/dto/promo"
 	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"
@@ -42,15 +42,18 @@ func (m *MockpromoService) EXPECT() *MockpromoServiceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockpromoService) Create(ctx context.Context, promoDto dto.PromoDTO) {
+func (m *MockpromoService) Create(ctx context.Context, companyId string, promoDto promo.CreatePromoDTO) (string, error) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Create", ctx, promoDto)
+	ret := m.ctrl.Call(m, "Create", ctx, companyId, promoDto)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockpromoServiceMockRecorder) Create(ctx, promoDto any) *MockpromoServiceCreateCall {
+func (mr *MockpromoServiceMockRecorder) Create(ctx, companyId, promoDto any) *MockpromoServiceCreateCall {
 	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockpromoService)(nil).Create), ctx, promoDto)
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockpromoService)(nil).Create), ctx, companyId, promoDto)
 	return &MockpromoServiceCreateCall{Call: call}
 }
 
@@ -60,19 +63,19 @@ type MockpromoServiceCreateCall struct {
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *MockpromoServiceCreateCall) Return() *MockpromoServiceCreateCall {
-	c.Call = c.Call.Return()
+func (c *MockpromoServiceCreateCall) Return(id string, err error) *MockpromoServiceCreateCall {
+	c.Call = c.Call.Return(id, err)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockpromoServiceCreateCall) Do(f func(context.Context, dto.PromoDTO)) *MockpromoServiceCreateCall {
+func (c *MockpromoServiceCreateCall) Do(f func(context.Context, string, promo.CreatePromoDTO) (string, error)) *MockpromoServiceCreateCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockpromoServiceCreateCall) DoAndReturn(f func(context.Context, dto.PromoDTO)) *MockpromoServiceCreateCall {
+func (c *MockpromoServiceCreateCall) DoAndReturn(f func(context.Context, string, promo.CreatePromoDTO) (string, error)) *MockpromoServiceCreateCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

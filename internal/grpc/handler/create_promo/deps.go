@@ -3,9 +3,9 @@ package create_promo
 
 import (
 	"context"
-	"promo-code-service/internal/domain/dto"
+	"promo-code-service/internal/domain/dto/promo"
 )
 
 type promoService interface {
-	Create(ctx context.Context, companyId string, promoDto dto.PromoDTO)
+	Create(ctx context.Context, companyId string, promoDto promo.CreatePromoDTO) (id string, err error)
 }

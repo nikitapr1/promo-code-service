@@ -36,14 +36,14 @@ func main() {
 
 	storage, err := postgres.New(cfg.DatabaseUrl)
 	if err != nil {
-		panic(fmt.Errorf("%s: failed to connect: %s", op, err))
+		panic(fmt.Errorf("%s: failed to connect to database:\n%s", op, err))
 	}
 
 	promoService := promoservice.New(log, storage, storage)
 
-	server := grpc.NewServer()
-
 	createPromoHandler := create_promo.New(promoService)
+
+	server := grpc.NewServer()
 
 	serverAPI := promogrpc.New(promoService, createPromoHandler)
 

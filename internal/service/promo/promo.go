@@ -3,7 +3,7 @@ package promoservice
 import (
 	"context"
 	"go.uber.org/zap"
-	"promo-code-service/internal/domain/dto"
+	"promo-code-service/internal/domain/dto/promo"
 )
 
 type Service struct {
@@ -33,7 +33,7 @@ func New(
 	}
 }
 
-func (p *Service) Create(ctx context.Context, companyId string, promoDto dto.PromoDTO) {
+func (p *Service) Create(ctx context.Context, companyId string, promoDto promo.CreatePromoDTO) {
 	//TODO implement me
 	panic("implement me")
 }

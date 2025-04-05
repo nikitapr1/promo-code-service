@@ -13,7 +13,7 @@ service PromoService {
 
 message CreatePromoRequest {
   string company_id = 1;
-  Mode enum = 2;
+  Mode mode = 2;
   optional string promo_common = 3;
   repeated string promo_unique = 4;
   string description = 5;
