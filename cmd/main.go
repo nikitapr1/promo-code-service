@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"net"
 	"os"
 	"os/signal"
 	"syscall"
@@ -28,9 +30,9 @@ func main() {
 
 	log.Info("Starting Promo Service", zap.Int("port", cfg.GRPCPort))
 
-	application := app.New(log, cfg.GRPCPort, cfg.DatabaseUrl)
-
-	go application.GRPCSrv.MustRun()
+	//application := app.New(log, cfg.GRPCPort, cfg.DatabaseUrl)
+	//
+	//go application.GRPCSrv.MustRun()
 
 	stop := make(chan os.Signal, 1)
 
@@ -58,4 +60,22 @@ func setupLogger(env string) (*zap.Logger, error) {
 		return nil, fmt.Errorf("unknown environment %q", env)
 	}
 	return log, err
+}
+
+func runGRPCServer(log *zap.Logger, server *grpc.Server) error {
+	const op = "grpcapp.Run"
+
+	log = log.With(zap.String("op", op))
+
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	log.Info("grpc server is running", zap.String("Address", lis.Addr().String()))
+
+	if err := server.Serve(lis); err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }
