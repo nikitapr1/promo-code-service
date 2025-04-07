@@ -37,6 +37,7 @@ func main() {
 	log.Info("Starting Promo Service", zap.Int("port", cfg.GRPCPort))
 
 	//TODO: connect to db
+	//
 
 	if err != nil {
 		panic(fmt.Errorf("%s: failed to connect to database:\n%s", op, err))
