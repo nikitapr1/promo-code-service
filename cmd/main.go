@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
@@ -11,7 +12,8 @@ import (
 	promogrpc "promo-code-service/internal/grpc"
 	"promo-code-service/internal/grpc/handler/create_promo"
 	promoservice "promo-code-service/internal/service/promo"
-	"promo-code-service/internal/storage/repository"
+	promorepository "promo-code-service/internal/storage/promo"
+
 	promopb "promo-code-service/pkg/api/pb"
 	"syscall"
 )
@@ -34,7 +36,8 @@ func main() {
 
 	log.Info("Starting Promo Service", zap.Int("port", cfg.GRPCPort))
 
-	storage, err := repository.New(cfg.DatabaseUrl)
+	//TODO: connect to db
+
 	if err != nil {
 		panic(fmt.Errorf("%s: failed to connect to database:\n%s", op, err))
 	}

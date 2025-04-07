@@ -1,4 +1,4 @@
-package promo
+package promorepository
 
 import (
 	"context"
