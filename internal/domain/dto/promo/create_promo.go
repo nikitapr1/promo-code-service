@@ -2,11 +2,11 @@ package promo
 
 import "time"
 
-type Mode int
+type Mode string
 
 const (
-	COMMON Mode = 0
-	UNIQUE Mode = 1
+	COMMON Mode = "COMMON"
+	UNIQUE Mode = "UNIQUE"
 )
 
 type Target struct {

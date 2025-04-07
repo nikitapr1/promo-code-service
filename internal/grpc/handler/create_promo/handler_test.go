@@ -5,8 +5,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 	"promo-code-service/internal/domain/dto/promo"
-	"promo-code-service/internal/pkg/pointer"
 	promopb "promo-code-service/pkg/api/pb"
+	"promo-code-service/pkg/pointer"
 	"testing"
 	"time"
 )
@@ -71,7 +71,7 @@ func TestHandler_CreatePromo(t *testing.T) {
 					MaxCount:    rq.GetMaxCount(),
 					ActiveFrom:  activeFrom,
 					ActiveUntil: activeUntil,
-				}).Return(createdId, nil) //TODO: DoAndReturn
+				}).Return(createdId, nil)
 
 			},
 			want: &promopb.CreatePromoResponse{

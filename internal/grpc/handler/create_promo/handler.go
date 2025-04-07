@@ -6,7 +6,6 @@ import (
 	"google.golang.org/grpc/status"
 	"promo-code-service/internal/domain/dto/promo"
 	promopb "promo-code-service/pkg/api/pb"
-	"time"
 )
 
 type Handler struct {
@@ -21,17 +20,8 @@ func New(promoService promoService) *Handler {
 
 func (h *Handler) CreatePromo(ctx context.Context, r *promopb.CreatePromoRequest) (*promopb.CreatePromoResponse, error) {
 
-	activeFrom, err := time.Parse(time.DateOnly, r.GetActiveFrom())
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid active_from")
-	}
-	activeUntil, err := time.Parse(time.DateOnly, r.GetActiveUntil())
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid active_until")
-	}
-
 	dto := promo.CreatePromoDTO{
-		Mode:        promo.Mode(r.GetMode()),
+		Mode:        promo.Mode(r.GetMode().String()),
 		PromoCommon: r.GetPromoCommon(),
 		PromoUnique: r.GetPromoUnique(),
 		Description: r.GetDescription(),
@@ -43,8 +33,8 @@ func (h *Handler) CreatePromo(ctx context.Context, r *promopb.CreatePromoRequest
 			Categories: r.Target.GetCategories(),
 		},
 		MaxCount:    r.GetMaxCount(),
-		ActiveFrom:  activeFrom,
-		ActiveUntil: activeUntil,
+		ActiveFrom:  r.GetActiveFrom().AsTime(),
+		ActiveUntil: r.GetActiveUntil().AsTime(),
 	}
 
 	promoId, err := h.promoService.Create(ctx, r.GetCompanyId(), dto)

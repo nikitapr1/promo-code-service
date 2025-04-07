@@ -2,6 +2,7 @@ syntax = "proto3";
 option go_package = "pkg/api/promopb";
 package api;
 
+import "google/protobuf/timestamp.proto";
 
 service PromoService {
   rpc CreatePromo(CreatePromoRequest) returns (CreatePromoResponse);
@@ -20,8 +21,8 @@ message CreatePromoRequest {
   optional string image_url = 6;
   Target target = 7;
   int64 max_count = 8;
-  string active_from = 9;
-  string active_until = 10;
+  google.protobuf.Timestamp active_from = 9;
+  google.protobuf.Timestamp active_until = 10;
 }
 
 message CreatePromoResponse {
