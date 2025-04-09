@@ -2,9 +2,11 @@ package create_promo
 
 import (
 	"context"
+	"errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"promo-code-service/internal/domain/dto/promo"
+	"promo-code-service/internal/service/promo"
 	promopb "promo-code-service/pkg/api/pb"
 )
 
@@ -20,7 +22,8 @@ func New(promoService promoService) *Handler {
 
 func (h *Handler) CreatePromo(ctx context.Context, r *promopb.CreatePromoRequest) (*promopb.CreatePromoResponse, error) {
 
-	dto := promo.CreatePromoDTO{
+	dto := &promo.CreatePromoDTO{
+		CompanyId:   r.GetCompanyId(),
 		Mode:        promo.Mode(r.GetMode().String()),
 		PromoCommon: r.GetPromoCommon(),
 		PromoUnique: r.GetPromoUnique(),
@@ -36,9 +39,13 @@ func (h *Handler) CreatePromo(ctx context.Context, r *promopb.CreatePromoRequest
 		ActiveFrom:  r.GetActiveFrom().AsTime(),
 		ActiveUntil: r.GetActiveUntil().AsTime(),
 	}
-
-	promoId, err := h.promoService.Create(ctx, r.GetCompanyId(), dto)
+	promoId, err := h.promoService.Create(ctx, dto)
 	if err != nil {
+
+		if errors.As(err, &promo_service.ValidationError{}) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 

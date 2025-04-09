@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/jackc/pgx/v5"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -12,8 +14,8 @@ import (
 	promogrpc "promo-code-service/internal/grpc"
 	"promo-code-service/internal/grpc/handler/create_promo"
 	promoservice "promo-code-service/internal/service/promo"
-	promorepository "promo-code-service/internal/storage/promo"
-
+	"promo-code-service/internal/storage/promo"
+	"promo-code-service/internal/storage/promo_code"
 	promopb "promo-code-service/pkg/api/pb"
 	"syscall"
 )
@@ -36,14 +38,17 @@ func main() {
 
 	log.Info("Starting Promo Service", zap.Int("port", cfg.GRPCPort))
 
-	//TODO: connect to db
-	//
+	db, err := sqlx.Open("pgx", cfg.DatabaseUrl)
 
 	if err != nil {
 		panic(fmt.Errorf("%s: failed to connect to database:\n%s", op, err))
 	}
 
-	promoService := promoservice.New(log, storage, storage)
+	promoRepository := promo_repository.New(db)
+
+	promoCodeRepository := promo_code_repository.New(db)
+
+	promoService := promoservice.New(log, promoRepository, promoCodeRepository)
 
 	createPromoHandler := create_promo.New(promoService)
 

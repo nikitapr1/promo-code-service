@@ -3,7 +3,7 @@ create type promo_mode as enum ('COMMON', 'UNIQUE');
 create table if not exists promo
 (
     id        varchar unique primary key,
-    owner_id varchar unique,
+    company_id varchar,
     description text,
     image_url varchar,
     active_from timestamp,
@@ -15,3 +15,11 @@ create table if not exists promo
     target_country varchar,
     target_categories varchar[]
 );
+
+create table if not exists promo_code (
+    id varchar unique primary key,
+    promo_id varchar,
+    code varchar,
+    is_activated bool,
+    max_count int
+)

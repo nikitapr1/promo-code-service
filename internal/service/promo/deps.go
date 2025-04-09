@@ -1,14 +1,15 @@
 //go:generate mockgen -source deps.go -package $GOPACKAGE -typed -destination mock_deps_test.go
-package promoservice
+package promo_service
 
 import (
 	"context"
-	"promo-code-service/internal/domain/dto/promo"
+	"promo-code-service/internal/storage/model"
 )
 
-type promoProvider interface {
+type promoRepository interface {
+	Create(ctx context.Context, promoModel *model.Promo) (id string, err error)
 }
 
-type promoSaver interface {
-	Create(ctx context.Context, companyId string, promoDto promo.CreatePromoDTO) (id string, err error)
+type promoCodeRepository interface {
+	Create(ctx context.Context, promoCodeModel *model.PromoCode) (id string, err error)
 }

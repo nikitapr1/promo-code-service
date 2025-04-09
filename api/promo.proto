@@ -31,8 +31,8 @@ message CreatePromoResponse {
 
 message ListPromoRequest {
   string company_id = 1;
-  uint64 limit = 2;
-  uint64 offset = 3;
+  int64 limit = 2;
+  int64 offset = 3;
   PromoSortBy sort_by = 4;
   string country = 5;
 }
@@ -68,8 +68,8 @@ message UpdatePromoResponse {
 }
 
 message Target {
-  optional uint32 age_from = 1;
-  optional uint32 age_until = 2;
+  optional int64 age_from = 1;
+  optional int64 age_until = 2;
   optional string country = 3;
   repeated string categories = 4;
 }

@@ -10,13 +10,14 @@ const (
 )
 
 type Target struct {
-	AgeFrom    uint32
-	AgeUntil   uint32
+	AgeFrom    int64
+	AgeUntil   int64
 	Country    string
 	Categories []string
 }
 
 type CreatePromoDTO struct {
+	CompanyId   string
 	Mode        Mode
 	PromoCommon string
 	PromoUnique []string

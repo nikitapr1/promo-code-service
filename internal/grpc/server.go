@@ -3,17 +3,17 @@ package promogrpc
 import (
 	"context"
 	"promo-code-service/internal/grpc/handler/create_promo"
-	promoservice "promo-code-service/internal/service/promo"
+	"promo-code-service/internal/service/promo"
 	promopb "promo-code-service/pkg/api/pb"
 )
 
 type ServerAPI struct {
 	promopb.UnimplementedPromoServiceServer
-	promoService       *promoservice.Service
+	promoService       *promo_service.Service
 	createPromoHandler *create_promo.Handler
 }
 
-func New(srv *promoservice.Service, createPromoHandler *create_promo.Handler) *ServerAPI {
+func New(srv *promo_service.Service, createPromoHandler *create_promo.Handler) *ServerAPI {
 	return &ServerAPI{
 		UnimplementedPromoServiceServer: promopb.UnimplementedPromoServiceServer{},
 		promoService:                    srv,

@@ -42,18 +42,18 @@ func (m *MockpromoService) EXPECT() *MockpromoServiceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockpromoService) Create(ctx context.Context, companyId string, promoDto promo.CreatePromoDTO) (string, error) {
+func (m *MockpromoService) Create(ctx context.Context, promoDto *promo.CreatePromoDTO) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", ctx, companyId, promoDto)
+	ret := m.ctrl.Call(m, "Create", ctx, promoDto)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockpromoServiceMockRecorder) Create(ctx, companyId, promoDto any) *MockpromoServiceCreateCall {
+func (mr *MockpromoServiceMockRecorder) Create(ctx, promoDto any) *MockpromoServiceCreateCall {
 	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockpromoService)(nil).Create), ctx, companyId, promoDto)
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockpromoService)(nil).Create), ctx, promoDto)
 	return &MockpromoServiceCreateCall{Call: call}
 }
 
@@ -69,13 +69,13 @@ func (c *MockpromoServiceCreateCall) Return(id string, err error) *MockpromoServ
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockpromoServiceCreateCall) Do(f func(context.Context, string, promo.CreatePromoDTO) (string, error)) *MockpromoServiceCreateCall {
+func (c *MockpromoServiceCreateCall) Do(f func(context.Context, *promo.CreatePromoDTO) (string, error)) *MockpromoServiceCreateCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockpromoServiceCreateCall) DoAndReturn(f func(context.Context, string, promo.CreatePromoDTO) (string, error)) *MockpromoServiceCreateCall {
+func (c *MockpromoServiceCreateCall) DoAndReturn(f func(context.Context, *promo.CreatePromoDTO) (string, error)) *MockpromoServiceCreateCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

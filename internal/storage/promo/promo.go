@@ -1,12 +1,10 @@
-package promorepository
+package promo_repository
 
 import (
 	"context"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	"promo-code-service/internal/domain/dto/promo"
-	"time"
+	"promo-code-service/internal/storage/model"
 )
 
 type Repository struct {
@@ -17,30 +15,29 @@ func New(db *sqlx.DB) *Repository {
 	return &Repository{db: db}
 }
 
-func (r *Repository) Create(ctx context.Context, companyId string, promoDto promo.CreatePromoDTO) (id string, err error) {
+func (r *Repository) Create(ctx context.Context, promoModel *model.Promo) (id string, err error) {
 
 	const op = "storage.promo.Create"
 
-	stmt, err := r.db.Preparex("INSERT INTO promo(id, owner_id, description, image_url, active_from, active_until, created_at, mode, target_age_from, target_age_until, target_country, target_categories) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id")
-	defer func(stmt *sqlx.Stmt) {
-		_ = stmt.Close()
-	}(stmt)
+	query := `
+		INSERT INTO promo(
+			id, company_id, description, image_url, active_from, active_until,
+			created_at, mode, target_age_from, target_age_until,
+			target_country, target_categories
+		) VALUES (
+			:id, :company_id, :description, :image_url, :active_from, :active_until,
+			:created_at, :mode, :target_age_from, :target_age_until,
+			:target_country, :target_categories
+		)
+		RETURNING id
+	`
 
+	stmt, err := r.db.PrepareNamedContext(ctx, query)
 	if err != nil {
-		return "", fmt.Errorf("%s: %w", op, err)
+		return "", fmt.Errorf("%s: prepare failed: %w", op, err)
 	}
 
-	err = stmt.QueryRowxContext(
-		ctx,
-		uuid.New().String(),
-		companyId,
-		promoDto.Description,
-		promoDto.ImageUrl,
-		promoDto.ActiveFrom,
-		promoDto.ActiveUntil,
-		time.Now(),
-		promoDto.Mode,
-	).Scan(&id)
+	err = stmt.QueryRowxContext(ctx, promoModel).Scan(&id)
 
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", op, err)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"promo-code-service/internal/domain/dto/promo"
 	promopb "promo-code-service/pkg/api/pb"
 	"promo-code-service/pkg/pointer"
@@ -16,21 +17,27 @@ func TestHandler_CreatePromo(t *testing.T) {
 		promoService *MockpromoService
 	}
 
+	activeFrom, err := time.Parse(time.DateOnly, "2025-01-01")
+	require.NoError(t, err)
+	activeUntil, err := time.Parse(time.DateOnly, "2026-01-01")
+	require.NoError(t, err)
+
 	rq := &promopb.CreatePromoRequest{
-		CompanyId:   "company_id",
-		Mode:        promopb.Mode(promo.COMMON),
+		CompanyId: "company_id",
+		Mode:      promopb.Mode_COMMON,
+
 		PromoCommon: pointer.To("promo"),
 		Description: "description",
 		ImageUrl:    pointer.To("https://google.com"),
 		Target: pointer.To(promopb.Target{
-			AgeFrom:    pointer.ToUint32(10),
-			AgeUntil:   pointer.ToUint32(30),
+			AgeFrom:    pointer.ToInt64(10),
+			AgeUntil:   pointer.ToInt64(30),
 			Country:    pointer.To("RU"),
 			Categories: []string{"pen", "city"},
 		}),
 		MaxCount:    5,
-		ActiveFrom:  "2025-01-01",
-		ActiveUntil: "2026-01-01",
+		ActiveFrom:  timestamppb.New(activeFrom),
+		ActiveUntil: timestamppb.New(activeUntil),
 	}
 
 	createdId := "someId"
@@ -45,20 +52,12 @@ func TestHandler_CreatePromo(t *testing.T) {
 			name: "success",
 			prepare: func(f *fields) {
 
-				activeFrom, err := time.Parse(time.DateOnly, rq.GetActiveFrom())
+				rqActiveFrom := rq.GetActiveFrom().AsTime()
 
-				if err != nil {
-					t.Errorf("failed to parse activeFrom from time: %v", err)
-				}
+				rqActiveUntil := rq.GetActiveUntil().AsTime()
 
-				activeUntil, err := time.Parse(time.DateOnly, rq.GetActiveUntil())
-
-				if err != nil {
-					t.Errorf("failed to parse activeUntil from time: %v", err)
-				}
-
-				f.promoService.EXPECT().Create(gomock.Any(), rq.GetCompanyId(), promo.CreatePromoDTO{
-					Mode:        promo.Mode(rq.Mode),
+				dto := promo.CreatePromoDTO{
+					Mode:        promo.Mode(rq.GetMode().String()),
 					PromoCommon: rq.GetPromoCommon(),
 					Description: rq.GetDescription(),
 					ImageUrl:    rq.GetImageUrl(),
@@ -69,9 +68,11 @@ func TestHandler_CreatePromo(t *testing.T) {
 						Categories: rq.Target.GetCategories(),
 					},
 					MaxCount:    rq.GetMaxCount(),
-					ActiveFrom:  activeFrom,
-					ActiveUntil: activeUntil,
-				}).Return(createdId, nil)
+					ActiveFrom:  rqActiveFrom,
+					ActiveUntil: rqActiveUntil,
+				}
+
+				f.promoService.EXPECT().Create(gomock.Any(), dto).Return(createdId, nil)
 
 			},
 			want: &promopb.CreatePromoResponse{
